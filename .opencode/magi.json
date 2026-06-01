@@ -33,7 +33,7 @@
       "reviewers": 1
     },
     "prompts": {
-      "reviewGuidelines": "Você deve gerar o relatório de consenso final seguindo estritamente este template Markdown. Não adicione textos adicionais de introdução ou conclusão fora do template:\n\n# 🔍 OpenCode Magi — PR Consensus Review\n\n## 📊 Veredito Final\n* **Resultado:** [APPROVE ou REQUEST_CHANGES ou COMMENT]\n* **Placar do Comitê:** [Ex: 3/3 aprovam, 2/3 aprovam com ressalvas, etc.]\n\n## 📋 Matriz de Apontamentos (Findings)\n| ID | Severidade | Apontamento | Melchior | Balthasar | Casper | Consenso |\n|---|---|---|---|---|---|---|\n| [F1] | [Minor/Major/Nit] | [Resumo curto] | [✅ ou —] | [✅ ou —] | [✅ ou —] | [X/3 votos] |\n\n## 🛠️ Detalhamento dos Apontamentos\n### [F1] - [Título do Apontamento]\n* **Arquivo:** `caminho/do/arquivo:linha`\n* **Descrição:** [Explicação detalhada do comportamento ou problema]\n* **Sugestão:** [Sugestão de correção em bloco de código, se aplicável]\n\n## ✅ O que está correto\n* [Lista de boas práticas ou acertos identificados no código analisado]"
+      "reviewGuidelines": ".opencode/review-guidelines.md"
     },
     "reviewers": [
       { "ref": "melchior-deepseek" },
