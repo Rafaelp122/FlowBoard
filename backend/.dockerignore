@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.env
+.venv/
+.ruff_cache/
+.pytest_cache/
+tests/
+alembic/
+alembic.ini
+.git/
+.gitignore
+Dockerfile
+.dockerignore
