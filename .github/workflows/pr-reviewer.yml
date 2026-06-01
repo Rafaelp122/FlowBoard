@@ -47,3 +47,4 @@ jobs:
             - Execute o ciclo completo de revisão multi-agent por maioria de votos.
             - Valide os apontamentos (Finding-level voting) antes de publicar.
             - Siga as regras de revisão definidas em .opencode/magici.json.
+            - **IMPORTANTE:** Publique o relatório COMPLETO de consenso como um comentário no PR usando o template exato definido em reviewGuidelines. Inclua TODOS os findings aprovados na matriz de apontamentos com detalhamento (arquivo, linha, descrição, sugestão). Não resuma — cada finding deve ser listado individualmente na matriz e detalhado na seção de detalhamento.
