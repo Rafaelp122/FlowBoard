@@ -185,6 +185,12 @@ Os critérios de aceitação definem quando a história está concluída (Confir
 Toda história só está concluída quando:
 
 - [ ] Critérios de aceitação da história atendidos.
+- [ ] Testes escritos **antes** da implementação (TDD: red → green → refactor).
+- [ ] Testes unitários backend: services e repositories com `pytest` + `factory_boy`.
+- [ ] Testes de integração backend: endpoints com `httpx.AsyncClient`.
+- [ ] Testes unitários frontend: componentes e hooks com `Vitest` + `RTL`.
+- [ ] Testes de integração frontend: API hooks com `vi.mock`.
+- [ ] E2E com Playwright (Fatia 2+): fluxos críticos como drag-and-drop e WebSocket.
 - [ ] Senhas armazenadas com hash (bcrypt), nunca em texto plano.
 - [ ] Token JWT validado em toda rota REST e handshake WebSocket.
 - [ ] Rotas verificam se o usuário é membro do quadro acessado.
@@ -193,5 +199,3 @@ Toda história só está concluída quando:
 - [ ] Conexões WebSocket isoladas por `board_id`.
 - [ ] Atualizações otimistas no frontend com reversão em caso de falha.
 - [ ] Tabela de atividades é append-only.
-- [ ] Endpoints REST cobertos por testes automatizados.
-- [ ] Componentes críticos do frontend testados.

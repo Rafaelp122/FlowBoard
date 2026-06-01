@@ -2,8 +2,7 @@
 
 ## Project status
 
-Pre-scaffold. No code, no build system, no dev server. Only `docs/` and installed skills exist.
-First task: scaffold backend and frontend for Fatia 1.
+Scaffolded. Backend (FastAPI + uv), frontend (Vite + React + shadcn), Docker Compose, CI/CD, and docs are in place. Ready for Fatia 1 implementation.
 
 ## Architecture
 
@@ -17,6 +16,17 @@ First task: scaffold backend and frontend for Fatia 1.
 - **Fatia 1** is the starting point: US01–US05 (auth + boards + columns).
 - User stories live at `docs/USER_STORIES.md` — that is the single source of truth for functional requirements. There is no REQUIREMENTS.md.
 - Definition of Done is at the bottom of `docs/USER_STORIES.md`. Every story must pass those gates before being considered done.
+- **TDD mandatory:** every issue/slice starts with tests. Write failing tests first, then implementation, then refactor. Never write implementation before tests.
+
+### Test layers per story
+
+Every user story must include all applicable layers before being considered done:
+
+| Layer | Backend | Frontend |
+|-------|---------|----------|
+| Unit | pytest + factory_boy (services, repositories) | Vitest + RTL (components, hooks) |
+| Integration | httpx.AsyncClient (router endpoints) | Vitest + vi.mock (API hooks) |
+| E2E | — | Playwright (Fatia 2+, user flows only) |
 
 ## Stack constraints
 
