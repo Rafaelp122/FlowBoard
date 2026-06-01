@@ -64,7 +64,12 @@ jobs:
         run: |
           uv run alembic upgrade head
           uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 &
-          sleep 3
+          for i in $(seq 1 15); do
+            if curl -s http://localhost:8000/health > /dev/null 2>&1; then
+              break
+            fi
+            sleep 1
+          done
 
       - name: Run E2E Tests
         working-directory: frontend
