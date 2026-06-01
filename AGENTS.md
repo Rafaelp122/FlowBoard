@@ -2,7 +2,7 @@
 
 ## Project status
 
-Scaffolded. Backend (FastAPI + uv), frontend (Vite + React + shadcn), Docker Compose, CI/CD, and docs are in place. Ready for Fatia 1 implementation.
+Scaffolded. Backend (FastAPI + uv), frontend (Vite + React + shadcn), Docker Compose, CI/CD, and docs are in place. Ready for Slice 1 implementation.
 
 ## Architecture
 
@@ -13,7 +13,7 @@ Scaffolded. Backend (FastAPI + uv), frontend (Vite + React + shadcn), Docker Com
 ## Development workflow
 
 - Work in **vertical slices** (see `docs/SLICES.md`). Never skip ahead.
-- **Fatia 1** is the starting point: US01–US05 (auth + boards + columns).
+- **Slice 1** is the starting point: US01–US05 (auth + boards + columns).
 - User stories live at `docs/USER_STORIES.md` — that is the single source of truth for functional requirements. There is no REQUIREMENTS.md.
 - Definition of Done is at the bottom of `docs/USER_STORIES.md`. Every story must pass those gates before being considered done.
 - **TDD mandatory:** every issue/slice starts with tests. Write failing tests first, then implementation, then refactor. Never write implementation before tests.
@@ -26,13 +26,13 @@ Every user story must include all applicable layers before being considered done
 |-------|---------|----------|
 | Unit | pytest + factory_boy (services, repositories) | Vitest + RTL (components, hooks) |
 | Integration | httpx.AsyncClient (router endpoints) | Vitest + vi.mock (API hooks) |
-| E2E | — | Playwright (Fatia 2+, user flows only) |
+| E2E | — | Playwright (Slice 2+, user flows only) |
 
 ## Stack constraints
 
 - **Backend:** FastAPI async-only. SQLAlchemy 2.0 `Mapped[]` style. PostgreSQL via asyncpg. JWT via python-jose + passlib[bcrypt]. Alembic for migrations.
-- **Frontend:** React 18+ with Vite. shadcn/ui for components. Tailwind CSS v4. TanStack Query v5 for server state. Zustand for UI state. @dnd-kit for drag-and-drop (Fatia 2+). Orval for API contract — generates typed React Query hooks from OpenAPI spec. No manual `api.ts` files.
-- **Real-time (Fatia 3+):** WebSockets nativos do FastAPI, agrupados por `board_id`. Features `cards/`, `comments/`, etc. não devem implementar WS até a Fatia 3 — usar apenas REST nas Fatias 1 e 2.
+- **Frontend:** React 18+ with Vite. shadcn/ui for components. Tailwind CSS v4. TanStack Query v5 for server state. Zustand for UI state. @dnd-kit for drag-and-drop (Slice 2+). Orval for API contract — generates typed React Query hooks from OpenAPI spec. No manual `api.ts` files.
+- **Real-time (Slice 3+):** WebSockets nativos do FastAPI, agrupados por `board_id`. Features `cards/`, `comments/`, etc. não devem implementar WS até a Slice 3 — usar apenas REST nas Slices 1 e 2.
 
 ## Installed skills
 
@@ -65,7 +65,7 @@ Skills are at `.agents/skills/`. Load them for patterns and conventions:
 ### Frontend
 
 - **Unit/component tests:** Vitest (ecossistema Vite, zero config).
-- **E2E tests (Fatia 2+):** Playwright for drag-and-drop and WebSocket flows.
+- **E2E tests (Slice 2+):** Playwright for drag-and-drop and WebSocket flows.
 
 ## ADRs
 

@@ -1,12 +1,12 @@
 # Estratégia de Slicing — FlowBoard
 
-Desenvolvimento fatiado verticalmente (Banco + API + UI) para entregar valor continuamente e reduzir riscos. Cada fatia é cumulativa: o trabalho da Fatia 1 continua sendo usado e estendido nas fatias seguintes.
+Desenvolvimento slicedo verticalmente (Banco + API + UI) para entregar valor continuamente e reduzir riscos. Cada slice é cumulativa: o trabalho da Slice 1 continua sendo usado e estendido nas slices seguintes.
 
 ```
-[Fatia 1: Fundação] ---> [Fatia 2: Kanban Pessoal] ---> [Fatia 3: Real-Time] ---> [Fatia 4: Logs/Comentários]
+[Slice 1: Fundação] ---> [Slice 2: Kanban Pessoal] ---> [Slice 3: Real-Time] ---> [Slice 4: Logs/Comentários]
 ```
 
-| Fatia | Nome                          | Valor entregue ao final                                                    |
+| Slice | Nome                          | Valor entregue ao final                                                    |
 |-------|-------------------------------|----------------------------------------------------------------------------|
 | 1     | Fundação e Quadros Básicos    | Cadastro, login, criação de quadros e colunas. Estrutura visual funcionando. |
 | 2     | Gestão de Tarefas             | CRUD completo de cards com drag-and-drop. Kanban estático funcional.        |
@@ -15,7 +15,7 @@ Desenvolvimento fatiado verticalmente (Banco + API + UI) para entregar valor con
 
 ---
 
-## Fatia 1: Fundação e Estrutura Base (MVP Inicial)
+## Slice 1: Fundação e Estrutura Base (MVP Inicial)
 
 **Objetivo:** Usuário se cadastra, faz login e cria a estrutura básica do quadro.
 
@@ -27,7 +27,7 @@ Desenvolvimento fatiado verticalmente (Banco + API + UI) para entregar valor con
 | US04     | Editar e excluir quadro     |
 | US05     | Gerenciar colunas           |
 
-**Por que essa fatia?**
+**Por que essa slice?**
 Com apenas isso, um usuário já consegue se cadastrar e montar a estrutura visual do seu fluxo de trabalho. Ainda não existem tarefas, mas já é possível validar a ideia e a usabilidade da navegação. O backend fornecerá APIs REST seguras, e o frontend terá a base de layout com Tailwind e React Router.
 
 **Entregável Técnico:**
@@ -38,7 +38,7 @@ Com apenas isso, um usuário já consegue se cadastrar e montar a estrutura visu
 
 ---
 
-## Fatia 2: Kanban Pessoal (Modo Estático)
+## Slice 2: Kanban Pessoal (Modo Estático)
 
 **Objetivo:** Um usuário gerencia cards sozinho no quadro, usando drag-and-drop.
 
@@ -49,8 +49,8 @@ Com apenas isso, um usuário já consegue se cadastrar e montar a estrutura visu
 | US08     | Mover card entre colunas (drag and drop) |
 | US09     | Excluir um card                          |
 
-**Por que essa fatia?**
-Aqui o quadro ganha vida. O usuário já consegue gerenciar suas próprias tarefas de forma visual. O drag-and-drop e o painel de detalhes tornam o produto realmente utilizável, mesmo que sozinho. A comunicação em tempo real ainda não existe — as alterações são persistidas via API REST e a página pode ser atualizada manualmente. O estado é gerenciado com React Query, preparando o terreno para a sincronização da próxima fatia.
+**Por que essa slice?**
+Aqui o quadro ganha vida. O usuário já consegue gerenciar suas próprias tarefas de forma visual. O drag-and-drop e o painel de detalhes tornam o produto realmente utilizável, mesmo que sozinho. A comunicação em tempo real ainda não existe — as alterações são persistidas via API REST e a página pode ser atualizada manualmente. O estado é gerenciado com React Query, preparando o terreno para a sincronização da próxima slice.
 
 **Entregável Técnico:**
 
@@ -60,7 +60,7 @@ Aqui o quadro ganha vida. O usuário já consegue gerenciar suas próprias taref
 
 ---
 
-## Fatia 3: Colaboração em Tempo Real
+## Slice 3: Colaboração em Tempo Real
 
 **Objetivo:** Vários membros no mesmo quadro veem alterações instantaneamente.
 
@@ -69,8 +69,8 @@ Aqui o quadro ganha vida. O usuário já consegue gerenciar suas próprias taref
 | US10     | Convite de membros ao quadro            |
 | US11     | Visualizar alterações em tempo real     |
 
-**Por que essa fatia?**
-Este é o salto técnico mais significativo: introduzir WebSockets e transformar o quadro em uma experiência multiusuário. As histórias de cards e colunas das fatias anteriores são agora atualizadas com eventos em tempo real, sem recarregar a página. A parte de convite garante que apenas membros autorizados acessem o quadro. Ao final, o FlowBoard já funciona como um Trello simplificado e colaborativo.
+**Por que essa slice?**
+Este é o salto técnico mais significativo: introduzir WebSockets e transformar o quadro em uma experiência multiusuário. As histórias de cards e colunas das slices anteriores são agora atualizadas com eventos em tempo real, sem recarregar a página. A parte de convite garante que apenas membros autorizados acessem o quadro. Ao final, o FlowBoard já funciona como um Trello simplificado e colaborativo.
 
 **Entregável Técnico:**
 
@@ -80,7 +80,7 @@ Este é o salto técnico mais significativo: introduzir WebSockets e transformar
 
 ---
 
-## Fatia 4: Comunicação e Rastreabilidade
+## Slice 4: Comunicação e Rastreabilidade
 
 **Objetivo:** Discussão em cards e auditoria de todas as ações.
 
@@ -89,7 +89,7 @@ Este é o salto técnico mais significativo: introduzir WebSockets e transformar
 | US12     | Comentar em um card               |
 | US13     | Histórico de atividades do card   |
 
-**Por que essa fatia?**
+**Por que essa slice?**
 Adiciona a camada de discussão e auditoria, completando a experiência de trabalho em equipe. Os comentários também são transmitidos em tempo real, aproveitando a infraestrutura de WebSocket já construída. O histórico fornece a transparência que gestores esperam.
 
 **Entregável Técnico:**
@@ -102,7 +102,7 @@ Adiciona a camada de discussão e auditoria, completando a experiência de traba
 
 ## Benefícios dessa Divisão
 
-- **Entrega contínua de valor:** ao final da primeira fatia já há algo funcional para validar com usuários reais.
+- **Entrega contínua de valor:** ao final da primeira slice já há algo funcional para validar com usuários reais.
 - **Aprendizado progressivo:** começa com FastAPI + REST, depois avança para WebSocket e estado otimista.
-- **Redução de risco:** cada fatia é um checkpoint concreto; se houver atraso, a fatia anterior continua funcional e entregável.
-- **Planejamento ágil:** as histórias dentro de uma fatia podem ser desenvolvidas em paralelo ou sequencialmente, dependendo da equipe.
+- **Redução de risco:** cada slice é um checkpoint concreto; se houver atraso, a slice anterior continua funcional e entregável.
+- **Planejamento ágil:** as histórias dentro de uma slice podem ser desenvolvidas em paralelo ou sequencialmente, dependendo da equipe.
