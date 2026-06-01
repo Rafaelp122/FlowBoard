@@ -1,0 +1,19 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "semanticCommits": "enabled",
+  "semanticCommitType": "chore",
+  "semanticCommitScope": "deps",
+  "packageRules": [
+    {
+      "matchPaths": ["backend/**"],
+      "semanticCommitScope": "deps-backend"
+    },
+    {
+      "matchPaths": ["frontend/**"],
+      "semanticCommitScope": "deps-frontend"
+    }
+  ]
+}
