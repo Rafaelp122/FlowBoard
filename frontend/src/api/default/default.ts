@@ -20,7 +20,7 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
-  HealthCheckHealthGet200
+  HealthResponse
 } from '../generated.schemas';
 
 import { apiClient } from '../../shared/api/client';
@@ -31,7 +31,7 @@ type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
 export type healthCheckHealthGetResponse200 = {
-  data: HealthCheckHealthGet200
+  data: HealthResponse
   status: 200
 }
 

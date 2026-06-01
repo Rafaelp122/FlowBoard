@@ -4,7 +4,7 @@
  * FlowBoard
  * OpenAPI spec version: 0.1.0
  */
-export type HealthCheckHealthGet200 = {
-  status?: string;
-};
+export interface HealthResponse {
+  status: string;
+}
 
