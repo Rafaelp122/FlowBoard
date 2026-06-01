@@ -1,0 +1,186 @@
+name: Integrity CI
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ----------------------------------------------------------------------------
+  # JOB 0: DETECT PATHS
+  # ----------------------------------------------------------------------------
+  detect-changes:
+    name: Detect Code Changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+      contract: ${{ steps.filter.outputs.contract }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Path Filter
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
+              - '.github/workflows/integrity-ci.yml'
+            frontend:
+              - 'frontend/**'
+              - '.github/workflows/integrity-ci.yml'
+            contract:
+              - 'backend/app/**/*.py'
+              - 'backend/pyproject.toml'
+              - 'frontend/orval.config.ts'
+              - '.github/workflows/integrity-ci.yml'
+
+  # ----------------------------------------------------------------------------
+  # JOB 1: STATIC ANALYSIS
+  # ----------------------------------------------------------------------------
+  lint:
+    name: Lint & Format Check
+    needs: detect-changes
+    if: needs.detect-changes.outputs.backend == 'true' || needs.detect-changes.outputs.frontend == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        if: needs.detect-changes.outputs.frontend == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Setup UV
+        if: needs.detect-changes.outputs.backend == 'true'
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.11"
+          enable-cache: true
+          cache-dependency-glob: "backend/uv.lock"
+
+      - name: Backend Lint (Ruff)
+        if: needs.detect-changes.outputs.backend == 'true'
+        run: cd backend && uv run ruff check . && uv run ruff format --check .
+
+      - name: Backend Type Check (Pyright)
+        if: needs.detect-changes.outputs.backend == 'true'
+        run: cd backend && uv run pyright . --level error
+
+      - name: Frontend Lint & TypeCheck
+        if: needs.detect-changes.outputs.frontend == 'true'
+        run: |
+          cd frontend
+          npm ci
+          npm run lint
+          npm run typecheck
+
+  # ----------------------------------------------------------------------------
+  # JOB 2: BACKEND TESTS
+  # ----------------------------------------------------------------------------
+  backend-tests:
+    name: Backend Tests
+    needs: [detect-changes, lint]
+    if: ! failure() && ! cancelled() && needs.detect-changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup UV
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.11"
+          enable-cache: true
+          cache-dependency-glob: "backend/uv.lock"
+
+      - name: Alembic Check
+        run: |
+          cd backend
+          uv run alembic check
+
+      - name: Pytest
+        run: cd backend && uv run pytest --cov=app --cov-report=term -v
+
+  # ----------------------------------------------------------------------------
+  # JOB 3: FRONTEND TESTS
+  # ----------------------------------------------------------------------------
+  frontend-tests:
+    name: Frontend Tests
+    needs: [detect-changes, lint]
+    if: ! failure() && ! cancelled() && needs.detect-changes.outputs.frontend == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install & Test
+        run: |
+          cd frontend
+          npm ci
+          npm run test -- --run
+
+  # ----------------------------------------------------------------------------
+  # JOB 4: API CONTRACT VALIDATION
+  # ----------------------------------------------------------------------------
+  contract-sync:
+    name: API Contract Sync
+    needs: [detect-changes]
+    if: |
+      ! failure() && ! cancelled() &&
+      needs.detect-changes.outputs.contract == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup UV
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.11"
+          enable-cache: true
+          cache-dependency-glob: "backend/uv.lock"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Export OpenAPI Schema
+        working-directory: backend
+        run: |
+          uv run fastapi run app/main.py &
+          sleep 3
+          curl -s http://localhost:8000/openapi.json > ../openapi.json
+          kill %1
+
+      - name: Validate Orval Sync
+        run: |
+          cd frontend && npm ci && npm run generate:api
+          git diff --exit-code || (echo "❌ SCHEMA DESATUALIZADO. Rode 'orval' localmente." && exit 1)
