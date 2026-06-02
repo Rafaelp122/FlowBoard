@@ -1,4 +1,4 @@
-name: OpenCode Magi Review
+name: opencode-magi-review
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -25,14 +25,13 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-      id-token: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           persist-credentials: false
-          fetch-depth: 0
+          fetch-depth: 0 # Required to evaluate full history in the git diff
 
       - name: Run OpenCode Magi Consensus
         uses: anomalyco/opencode/github@v1.15.12
@@ -40,6 +39,7 @@ jobs:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          # Use OpenCode Go provider model and API key
           model: opencode-go/deepseek-v4-pro
           prompt: |
             Inicie a orquestração do OpenCode Magi para este Pull Request.
