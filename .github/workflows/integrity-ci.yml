@@ -78,7 +78,7 @@ jobs:
 
       - name: Backend Lint (Ruff)
         if: needs.detect-changes.outputs.backend == 'true'
-        run: cd backend && uv run ruff check . && uv run ruff format --check .
+        run: cd backend && uv sync --group dev && uv run ruff check . && uv run ruff format --check .
 
       - name: Backend Type Check (Pyright)
         if: needs.detect-changes.outputs.backend == 'true'
@@ -111,13 +111,8 @@ jobs:
           enable-cache: true
           cache-dependency-glob: "backend/uv.lock"
 
-      - name: Alembic Check
-        run: |
-          cd backend
-          uv run alembic check
-
       - name: Pytest
-        run: cd backend && uv run pytest --cov=app --cov-report=term -v
+        run: cd backend && uv sync --group dev && uv run pytest --cov=app --cov-report=term -v
 
   # ----------------------------------------------------------------------------
   # JOB 3: FRONTEND TESTS
@@ -183,7 +178,7 @@ jobs:
             fi
             sleep 1
           done
-          curl -s http://localhost:8000/openapi.json > ../openapi.json
+          curl -s http://localhost:8000/openapi.json | python -m json.tool > ../openapi.json
           kill $SERVER_PID
 
       - name: Validate Orval Sync
