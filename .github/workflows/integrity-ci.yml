@@ -62,7 +62,7 @@ jobs:
 
       - name: Setup Node
         if: needs.detect-changes.outputs.frontend == 'true'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "22"
           cache: "npm"
@@ -127,7 +127,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "22"
           cache: "npm"
@@ -161,7 +161,7 @@ jobs:
           cache-dependency-glob: "backend/uv.lock"
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "22"
           cache: "npm"
